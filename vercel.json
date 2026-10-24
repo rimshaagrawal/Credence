@@ -1,13 +1,11 @@
-﻿{
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "pnpm --filter @credence/web run build",
+{
+  "buildCommand": "pnpm --filter @workspace/credence run build",
   "outputDirectory": "artifacts/credence/dist",
   "installCommand": "pnpm install --frozen-lockfile",
-  "framework": "vite",
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "https://credence-api.onrender.com/api/$1"
+      "source": "/api/:path*",
+      "destination": "https://credence-api.onrender.com/api/:path*"
     }
   ],
   "headers": [
@@ -20,8 +18,5 @@
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
       ]
     }
-  ],
-  "env": {
-    "VITE_API_BASE_URL": "https://credence-api.onrender.com"
-  }
+  ]
 }
