@@ -48,3 +48,10 @@ Thumbs.db
 .cache/
 .local/
 /generated-artifacts/
+
+# Environment secrets — NEVER commit real .env files
+.env
+.env.local
+.env.production
+.env.*.local
+# .env.example is safe to commit and should be tracked

@@ -1,0 +1,42 @@
+﻿# Render deployment configuration for Credence backend API
+# Docs: https://render.com/docs/render-yaml-spec
+
+services:
+  - type: web
+    name: credence-api
+    runtime: node
+    region: oregon  # Change to your preferred region: oregon | ohio | frankfurt | singapore
+    plan: free       # Upgrade to starter/standard for production
+    buildCommand: pnpm install --frozen-lockfile && pnpm --filter @workspace/db run push && pnpm --filter @workspace/api-server run build
+    startCommand: node artifacts/api-server/dist/index.js
+    healthCheckPath: /api/health
+    autoDeploy: true
+
+    envVars:
+      # --- Database (set in Render dashboard or fill here) ---
+      - key: DATABASE_URL
+        sync: false   # Set this manually in the Render dashboard — never commit the real value
+
+      # --- App ---
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "8080"
+
+      # --- CORS: allow requests from your Vercel frontend ---
+      - key: CORS_ORIGIN
+        value: https://credence.vercel.app  # Replace with your actual Vercel URL
+
+      # --- Optional integrations (set when available) ---
+      # - key: TINYFISH_API_KEY
+      #   sync: false
+      # - key: OPENAI_API_KEY
+      #   sync: false
+      # - key: BLOCKCHAIN_SIGNING_KEY
+      #   sync: false
+      # - key: CLERK_SECRET_KEY
+      #   sync: false
+
+    scaling:
+      minInstances: 1
+      maxInstances: 1   # Increase for production traffic
